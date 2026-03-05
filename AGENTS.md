@@ -22,3 +22,4 @@ Instructions:
 ## Lazy-loaded context
 
 - For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
+- For writing bash scripts: @rules/bash.md
