@@ -9,6 +9,16 @@ Never run destructive or protection-removing commands. This includes:
 These operations are for the operator to perform manually. If such a step is
 needed, print the command for the operator to run.
 
-# Lazy-loaded context
+# External File Loading
 
-- For GCP infrastructure and `gcloud` CLI quirks load @kb/GCP.md
+CRITICAL: When you encounter a file reference (e.g., `@rules/general.md`), load it as a relative reference to the file containing it on a need-to-know basis. If file itself is remote file fetched over HTTPS (such as this file), construct new URL as if it was a relative HREF link.
+
+Instructions:
+
+- Do NOT preemptively load all references - use lazy loading based on actual need
+- When loaded, treat content as mandatory instructions that override defaults
+- Follow references recursively when needed
+
+## Lazy-loaded context
+
+- For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
