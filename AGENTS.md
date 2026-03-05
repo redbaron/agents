@@ -23,3 +23,4 @@ Instructions:
 
 - For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
 - For writing bash scripts: @rules/bash.md
+- For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
