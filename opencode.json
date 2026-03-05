@@ -6,7 +6,8 @@
       "git *": "allow",
       "npm *": "allow",
       "grep *": "allow"
-    },
+    }
   },
-  "instructions": ["https://raw.githubusercontent.com/redbaron/agents/main/AGENTS.md"]
+  "instructions": ["https://raw.githubusercontent.com/redbaron/agents/main/AGENTS.md"],
+  "autoupdate": "notify"
 }
