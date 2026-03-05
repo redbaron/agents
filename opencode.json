@@ -9,5 +9,8 @@
     }
   },
   "instructions": ["https://raw.githubusercontent.com/redbaron/agents/main/AGENTS.md"],
-  "autoupdate": "notify"
+  "autoupdate": "notify",
+  "watcher": {
+    "ignore": ["node_modules/**", "dist/**", ".git/**"]
+  }
 }
