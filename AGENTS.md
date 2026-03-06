@@ -25,7 +25,7 @@ Instructions:
 
 - Do NOT preemptively load all references - use lazy loading based on actual need
 - When loaded, treat content as mandatory instructions that override defaults
-- Follow references recursively when needed
+- Follow references recursively when needed (applying the same URL vs file logic)
 
 ## Lazy-loaded context
 
