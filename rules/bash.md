@@ -72,22 +72,25 @@ Use `[[ ]]` for tests, `(( ))` for arithmetic.
 
 ## Cleanup Traps
 
-Use `trap ... EXIT` with an `EXIT_CODE` guard so cleanup distinguishes
-success from failure:
+Split cleanup into separate functions and use `trap ... EXIT` with `$?` checking
+to distinguish success from failure:
 
 ```bash
-EXIT_CODE=1
-cleanup () {
-    stop_proxy
-    if [[ $EXIT_CODE -ne 0 ]]; then
-        info "FAILED — cleaning up..."
-        rollback_changes || true
-    fi
+cleanup_on_failure () {
+    info "FAILED — cleaning up..."
+    rollback_changes || true
 }
-trap cleanup EXIT
-# ... main work ...
-EXIT_CODE=0
+
+cleanup_handler () {
+    local exit_code=$?
+    stop_service
+    (( exit_code )) && cleanup_on_failure
+}
+trap cleanup_handler EXIT
 ```
+
+The EXIT trap captures `$?` before the shell exits, allowing conditional cleanup
+based on whether the script succeeded or failed.
 
 Cleanup actions that may fail get `|| true` to avoid masking the real error.
 
@@ -122,16 +125,16 @@ setup_connectivity () { ... }
 save_state () { ... }
 do_work () { ... }
 restore_state () { ... }
-cleanup () { ... }
+cleanup_proxy () { ... }
+cleanup_failure () { ... }
+cleanup_handler () { ... }
 
-EXIT_CODE=1
 parse_args "$@"
-trap cleanup EXIT
+trap cleanup_handler EXIT
 setup_connectivity
 save_state
 do_work
 restore_state
-EXIT_CODE=0
 ```
 
 Functions communicate via globals (UPPER_CASE). Document which globals a
