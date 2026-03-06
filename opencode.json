@@ -5,7 +5,9 @@
       "*": "ask",
       "git *": "allow",
       "npm *": "allow",
-      "grep *": "allow"
+      "grep *": "allow",
+      "rg *": "allow",
+      "shellcheck *": "allow"
     }
   },
   "instructions": ["https://raw.githubusercontent.com/redbaron/agents/main/AGENTS.md"],
