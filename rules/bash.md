@@ -107,6 +107,42 @@ Cleanup actions that may fail get `|| true` to avoid masking the real error.
 - `return` for non-fatal early exit; `exit` only at top level or in `fatal`.
 - Use `## Section name` comments to group related code.
 
+## Script Structure
+
+Group related statements into functions so the main flow reads as a short,
+linear sequence of high-level steps. Each function should represent one
+logical step — for example, argument parsing *and* input validation *and*
+global initialisation are one step (`parse_args`), not three.
+
+Define all functions first, then have the main flow at the bottom:
+
+```bash
+parse_args () { ... }
+setup_connectivity () { ... }
+save_state () { ... }
+do_work () { ... }
+restore_state () { ... }
+cleanup () { ... }
+
+EXIT_CODE=1
+parse_args "$@"
+trap cleanup EXIT
+setup_connectivity
+save_state
+do_work
+restore_state
+EXIT_CODE=0
+```
+
+Functions communicate via globals (UPPER_CASE). Document which globals a
+function sets when it is not obvious from the name (`## ...; sets BACKUP_ID`).
+
+Optional steps use guard-style invocation rather than if/else:
+
+```bash
+[[ -z "$SLOT_NAME" ]] || create_replication_slot
+```
+
 ## Capturing Output
 
 ```bash
