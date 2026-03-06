@@ -84,7 +84,7 @@ cleanup_on_failure () {
 cleanup_handler () {
     local exit_code=$?
     stop_service
-    (( exit_code )) && cleanup_on_failure
+    (( exit_code == 0 )) || cleanup_on_failure
 }
 trap cleanup_handler EXIT
 ```
@@ -152,3 +152,13 @@ Optional steps use guard-style invocation rather than if/else:
 read -r A B C < <(command)           # multiple fields
 readarray -t LINES < <(command)      # array of lines
 ```
+
+## Validation
+
+Always run `shellcheck` on bash scripts after editing:
+
+```bash
+shellcheck -s bash script.sh
+```
+
+Address all warnings before considering the script complete.

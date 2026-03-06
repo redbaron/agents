@@ -30,7 +30,7 @@ Instructions:
 ## Lazy-loaded context
 
 - For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
-- For writing bash scripts: @rules/bash.md
+- For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
 
 Source code links in knowledge base files are for deep dives only — do not load them unless tasked with explaining or verifying the underlying reasoning.
