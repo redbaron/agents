@@ -30,6 +30,7 @@ Instructions:
 ## Lazy-loaded context
 
 - For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
+- For GitHub CLI (`gh`) and API interactions: @kb/github.md
 - For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
 
