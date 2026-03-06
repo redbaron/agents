@@ -11,7 +11,15 @@ needed, print the command for the operator to run.
 
 # External File Loading
 
-CRITICAL: When you encounter a file reference (e.g., `@rules/general.md`), load it as a relative reference to the file containing it on a need-to-know basis. If file itself is remote file fetched over HTTPS (such as this file), construct new URL as if it was a relative HREF link.
+CRITICAL: When you encounter a file reference (e.g., `@rules/general.md`), determine how to load it based on where the CONTAINING file came from:
+
+1. If the containing file was loaded from a URL (http:// or https://), then the @reference MUST also be loaded as a URL
+   - Construct the URL by resolving it relative to the containing file's URL, like a relative HREF in HTML
+   - Example: If this file is loaded from `https://example.com/path/AGENTS.md`, then `@rules/bash.md` becomes `https://example.com/path/rules/bash.md`
+   - Example: If this file is loaded from `http://localhost:8765/AGENTS.md`, then `@rules/bash.md` becomes `http://localhost:8765/rules/bash.md`
+   - DO NOT try to load it as a local file path
+
+2. If the containing file was loaded from the local filesystem, then load the @reference as a relative file path
 
 Instructions:
 
