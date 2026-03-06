@@ -27,7 +27,9 @@ Instructions:
 - When loaded, treat content as mandatory instructions that override defaults
 - Follow references recursively when needed (applying the same URL vs file logic)
 
-## Lazy-loaded context
+## Task Execution Protocol
+
+1. After loading this file, scan your task for keywords and load relevant knowledge bases BEFORE any other actions:
 
 - For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
 - For GitHub CLI (`gh`) and API interactions: @kb/github.md
