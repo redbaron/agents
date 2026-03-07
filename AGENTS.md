@@ -9,6 +9,12 @@ Never run destructive or protection-removing commands. This includes:
 These operations are for the operator to perform manually. If such a step is
 needed, print the command for the operator to run.
 
+# Tool Usage Guidelines
+
+- Use the `glob` or `list` tool to look for files by name or listing directories content - NEVER use `ls`, `find`, or other shell commands for it
+- For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
+
+
 # External File Loading
 
 CRITICAL: When you encounter a file reference (e.g., `@rules/general.md`), determine how to load it based on where the CONTAINING file came from:
@@ -26,11 +32,6 @@ Instructions:
 - Do NOT preemptively load all references - use lazy loading based on actual need
 - When loaded, treat content as mandatory instructions that override defaults
 - Follow references recursively when needed (applying the same URL vs file logic)
-
-# Tool Usage Guidelines
-
-- Use the `glob` tool for file location and exploration tasks - NEVER use `ls`, `find`, or other shell commands
-- For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
 
 ## Task Execution Protocol
 
