@@ -1,12 +1,12 @@
 ---
-description: Iterate on agent instructions until desired behavior is achieved
+description: "Iterate on agent instructions until behavior achieved. Syntax: /when-asked 'task' --improve-until 'success criteria'"
 agent: build
 ---
 
 You are tasked with improving agent instructions in the current repository.
 
 **Test task:** $1
-**Success criteria:** $2
+**Success criteria:** $3
 
 **Workflow:**
 1. Start HTTP server on port 8766 serving the current directory if not already running: `python3 -m http.server 8766 > /tmp/agents-http.log 2> /dev/null &`
@@ -31,7 +31,7 @@ You are tasked with improving agent instructions in the current repository.
 - HTTP server stderr redirected to /dev/null to avoid tracebacks
 - Current model is extracted from system context and passed via `-m` flag
 - `HOME=$(mktemp -d)` prevents loading ~/.config/opencode/opencode.json
-- `XDG_DATA_HOME=~/.local/share` preserves provider credentials
+- `XDG_DATA_HOME` preserves provider credentials
 - `OPENCODE_CONFIG` points to static test config file
 - Bash is denied to isolate the test to just knowledge base loading behavior
 - WebFetch is allowed so the agent can load knowledge bases from HTTP server
