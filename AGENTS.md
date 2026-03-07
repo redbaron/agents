@@ -35,5 +35,8 @@ Instructions:
 - For GitHub CLI (`gh`) and API interactions: @kb/github.md
 - For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
+- For working with JSON files (reading, writing, validating files on disk): @rules/json.md
+  - Only load this when the task involves actual file paths or file operations
+  - Do NOT load for JSON strings/data in conversation context
 
 Source code links in knowledge base files are for deep dives only — do not load them unless tasked with explaining or verifying the underlying reasoning.
