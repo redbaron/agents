@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "pgrep *": "allow",
+      "echo *": "allow",
+      "python3 -m http.server *": "allow",
+      "curl -s http://localhost:8766 *": "allow",
+      "sleep *": "allow",
+      "head *": "allow"
+    }
+  }
+}

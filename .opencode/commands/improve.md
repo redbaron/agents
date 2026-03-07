@@ -9,24 +9,14 @@ You are tasked with improving agent instructions in the current repository.
 **Success criteria:** $2
 
 **Workflow:**
-1. Start HTTP server on port 8766 serving the current directory if not already running: `python3 -m http.server 8766 > /tmp/agents-http.log 2>&1 &`
+1. Start HTTP server on port 8766 serving the current directory if not already running: `python3 -m http.server 8766 > /tmp/agents-http.log 2> /dev/null &`
 2. Edit the instruction files (AGENTS.md or kb/*.md files) to achieve the success criteria
 3. Clear the HTTP server log: `> /tmp/agents-http.log`
-4. Generate a test opencode.json in a temp directory:
+4. Determine the current model from your system context (e.g., "opencode-go/glm-5" or "anthropic/claude-sonnet-4-5")
+5. Run the test in an empty directory with isolated config but shared credentials:
    ```bash
-   TESTDIR=$(mktemp -d)
-   cat > "$TESTDIR/opencode.json" << 'TESTCONFIG'
-   {
-     "$schema": "https://opencode.ai/config.json",
-     "instructions": ["http://localhost:8766/AGENTS.md"],
-     "permission": {
-       "bash": { "*": "deny" },
-       "webfetch": "deny"
-     }
-   }
-   TESTCONFIG
+   CONFIG_PATH="$(pwd)/.opencode/commands/improve-test-config.json" ORIG_HOME="$HOME" && cd $(mktemp -d) && XDG_DATA_HOME="$ORIG_HOME/.local/share" HOME=$(mktemp -d) OPENCODE_CONFIG="$CONFIG_PATH" opencode run -m <CURRENT_MODEL> message "$1"
    ```
-5. Run the test: `cd "$TESTDIR" && HOME=/dev/null opencode run message "$1"`
 6. Check the HTTP server log to verify which files were loaded: `grep "GET" /tmp/agents-http.log`
 7. Analyze the test output and logs to determine if the success criteria was achieved
 8. If not achieved, iterate: make more edits and re-test
@@ -38,9 +28,12 @@ You are tasked with improving agent instructions in the current repository.
 - No manual intervention or additional hints beyond the test task
 
 **Test environment notes:**
-- `HOME=/dev/null` prevents loading system-level ~/.config/opencode/opencode.json
-- Test config only loads instructions from the HTTP server (no system config interference)
-- Test task is passed cleanly without preamble
-- Bash and webfetch are denied to isolate the test to just knowledge base loading behavior
+- HTTP server stderr redirected to /dev/null to avoid tracebacks
+- Current model is extracted from system context and passed via `-m` flag
+- `HOME=$(mktemp -d)` prevents loading ~/.config/opencode/opencode.json
+- `XDG_DATA_HOME=~/.local/share` preserves provider credentials
+- `OPENCODE_CONFIG` points to static test config file
+- Bash is denied to isolate the test to just knowledge base loading behavior
+- WebFetch is allowed so the agent can load knowledge bases from HTTP server
 
 Keep the HTTP server running between iterations for faster testing. Stop it with `pkill -f "python3 -m http.server 8766"` when done.
