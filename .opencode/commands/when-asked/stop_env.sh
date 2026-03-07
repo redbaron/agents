@@ -17,7 +17,6 @@ cleanup_test_env () {
 	
 	info "Cleaning test env directory"
 	rm -rf "${TEST_ENV_DIR:?}"/*
-	rm -rf "${TEST_ENV_DIR:?}"/.??*
 }
 
 stop_http_server () {

@@ -3,6 +3,7 @@ set -ue
 set -o pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+TEST_ENV_DIR="${SCRIPT_DIR}/test-env"
 
 log () { echo "$(date -u -Iseconds)" "[$1]" "${@:2}" >&2 ; }
 info () { log "INFO" "$@" ; }
@@ -17,12 +18,11 @@ parse_args () {
 
 clear_http_log () {
 	info "Clearing HTTP server log"
-	: > /tmp/agents-http.log
+	: > $TEST_ENV_DIR/agents-http.log
 }
 
 run_opencode () {
-	local TEST_ENV_DIR="${SCRIPT_DIR}/test-env"
-	local CONFIG_PATH="${SCRIPT_DIR}/improve-test-config.json"
+	local CONFIG_PATH="${SCRIPT_DIR}/when-asked-config.json"
 	local ORIG_HOME="$HOME"
 	
 	[[ -d "$TEST_ENV_DIR" ]] || mkdir -p "$TEST_ENV_DIR"
@@ -34,7 +34,7 @@ run_opencode () {
 	XDG_DATA_HOME="$ORIG_HOME/.local/share" \
 		HOME=$(mktemp -d) \
 		OPENCODE_CONFIG="$CONFIG_PATH" \
-		opencode run -m "$MODEL" message "$TASK"
+		exec opencode run -m "$MODEL" message "$TASK"
 }
 
 parse_args "$@"
