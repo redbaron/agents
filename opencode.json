@@ -7,7 +7,8 @@
       "npm *": "allow",
       "grep *": "allow",
       "rg *": "allow",
-      "shellcheck *": "allow"
+      "shellcheck *": "allow",
+      "jq *": "allow"
     }
   },
   "instructions": ["https://raw.githubusercontent.com/redbaron/agents/main/AGENTS.md"],
