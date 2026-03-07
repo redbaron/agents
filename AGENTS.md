@@ -27,6 +27,11 @@ Instructions:
 - When loaded, treat content as mandatory instructions that override defaults
 - Follow references recursively when needed (applying the same URL vs file logic)
 
+# Tool Usage Guidelines
+
+- Use the `glob` tool for file location and exploration tasks - NEVER use `ls`, `find`, or other shell commands
+- For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
+
 ## Task Execution Protocol
 
 1. After loading this file, scan your task for keywords and load relevant knowledge bases BEFORE any other actions:
@@ -35,8 +40,5 @@ Instructions:
 - For GitHub CLI (`gh`) and API interactions: @kb/github.md
 - For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
-- For working with JSON files (reading, writing, validating files on disk): @rules/json.md
-  - Only load this when the task involves actual file paths or file operations
-  - Do NOT load for JSON strings/data in conversation context
 
 Source code links in knowledge base files are for deep dives only — do not load them unless tasked with explaining or verifying the underlying reasoning.
