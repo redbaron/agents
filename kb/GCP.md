@@ -6,6 +6,8 @@
   Always fetch existing flags first and include them in the patch command.
 - `cloudsql.pg_authid_select_role` flag needed to read `pg_authid` (dynamic, no restart).
 - `gcloud sql users create` grants `cloudsqlsuperuser` but NOT `REPLICATION` — must `ALTER ROLE`.
+- `gcloud sql users create` behaves as an upsert: if the user already exists it updates the
+  password and returns success (exit 0).
 - Labels update require `gcloud alpha sql instances patch --update-labels`.
 
 ### Backup & Restore vs Clone
