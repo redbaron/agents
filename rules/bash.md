@@ -52,6 +52,68 @@ For JSON, use `jq` with `--arg` — never interpolate variables into JSON string
 jq -c --arg IMG "${NEW_IMG}" -n '.spec.imageName=$IMG'
 ```
 
+## JSON and jq
+
+Treat `jq` as a standard tool — always available, no need to guard its presence.
+Use it freely instead of `grep`/`awk`/`sed` pipelines for any JSON work.
+
+### Store related state as a JSON object
+
+When a function produces multiple related fields, store them together in a single
+JSON object variable rather than scattering them into individual globals. Callers
+extract only what they need at the point of use:
+
+```bash
+# producer
+instance_info=$(jq '{
+    endpoint:   .Endpoint.Address,
+    vpc_id:     .DBSubnetGroup.VpcId,
+    subnet_ids: [.DBSubnetGroup.Subnets[].SubnetIdentifier],
+    sg_ids:     [.VpcSecurityGroups[].VpcSecurityGroupId]
+}' <<< "$raw")
+
+# consumer — extract inline, only what's needed
+endpoint=$(jq -r '.endpoint' <<< "$instance_info")
+subnet_ids=$(jq -c '.subnet_ids' <<< "$instance_info")
+```
+
+This avoids a proliferation of `_ENDPOINT`, `_VPC_ID`, `_SUBNET_IDS` globals that
+are just carriers for a single structured value.
+
+### Delegate assertions to jq
+
+Use `// error("message")` for null checks inline in the same `jq` call that does
+the extraction. `jq` prints the message to stderr and exits non-zero; `set -e`
+aborts the script and fires the EXIT trap. No need to duplicate the message in a
+`|| fatal`:
+
+```bash
+# jq prints the error, set -e aborts — no || fatal needed
+raw=$(aws rds describe-db-instances ... \
+    | jq --arg id "$db_id" \
+        '.DBInstances[0] // error("RDS instance \($id) not found")')
+
+info_json=$(jq --arg id "$db_id" '{
+    endpoint: (.Endpoint.Address // error("RDS instance \($id) has no endpoint")),
+    vpc_id:   .DBSubnetGroup.VpcId
+}' <<< "$raw")
+```
+
+### Keep lists in JSON when already in JSON
+
+If a list originates from JSON or is being passed to/from `jq`, keep it as a
+JSON array throughout — don't convert to space-delimited strings or bash arrays
+mid-flight. Iterate with `jq -r '.[]'` into a `while read` loop:
+
+```bash
+while IFS= read -r item; do
+    process "$item"
+done < <(jq -r '.[]' <<< "$json_array")
+```
+
+Use bash arrays when the data originates in bash and never needs to cross a JSON
+boundary.
+
 ## Flow Control
 
 The pattern is: **assert the happy path, handle deviation inline**.
@@ -102,6 +164,7 @@ Cleanup actions that may fail get `|| true` to avoid masking the real error.
 - Always double-quote expansions: `"$VAR"`, `"$@"`.
 - Use `${VAR:?error}` over silent defaults.
 - Use `declare -A` for associative arrays when mapping keys to values.
+- Prefer a single JSON object variable over multiple related scalar globals — extract fields at the point of use with `jq`.
 
 ## Functions
 
