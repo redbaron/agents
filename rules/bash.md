@@ -170,6 +170,7 @@ Cleanup actions that may fail get `|| true` to avoid masking the real error.
 
 - `name()` syntax (no `function` keyword).
 - `local` all variables that don't need to escape the function.
+- For single-argument functions, use `$1` directly — no need for `local name="$1"`.
 - `return` for non-fatal early exit; `exit` only at top level or in `fatal`.
 - Use `## Section name` comments to group related code.
 
