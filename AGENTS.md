@@ -37,8 +37,9 @@ Instructions:
 
 1. After loading this file, scan your task for keywords and load relevant knowledge bases BEFORE any other actions:
 
-- For GCP (Google Cloud Platform) infrastructure and `gcloud` CLI quirks: @kb/GCP.md
-- For GitHub CLI (`gh`) and API interactions: @kb/github.md
+- For ANY work involving GCP infrastructure, Cloud SQL, GKE, `gcloud` CLI, or answering questions about GCP: @kb/GCP.md
+- For ANY work involving AWS infrastructure, RDS, EC2, IAM, `aws` CLI, or answering questions about AWS: @kb/AWS.md
+- For ANY use of `gh` CLI or GitHub API, including PRs, issues, reviews, comments, and checks: @kb/github.md
 - For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
 
