@@ -51,3 +51,7 @@ Verified against [REL_18_3](https://github.com/postgres/postgres/tree/REL_18_3).
 - Only affects the **publisher side**. The subscriber is always single-threaded per table.
 
 [tablesync-copy]: https://github.com/postgres/postgres/blob/REL_18_3/src/backend/replication/logical/tablesync.c#L1143
+
+## psql CLI
+
+- `:var` substitution does **not** work with `-c` — use `-f` or stdin instead.
