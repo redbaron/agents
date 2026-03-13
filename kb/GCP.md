@@ -5,7 +5,10 @@
 - `gcloud sql instances patch --database-flags` REPLACES all flags, not merges.
   Always fetch existing flags first and include them in the patch command.
 - `cloudsql.pg_authid_select_role` flag needed to read `pg_authid` (dynamic, no restart).
-- `gcloud sql users create` grants `cloudsqlsuperuser` but NOT `REPLICATION` — must `ALTER ROLE`.
+- Cloud SQL has no real PostgreSQL superuser (`rolsuper`). The closest is `cloudsqlsuperuser`
+  (`rolcreaterole`, `rolcreatedb`, but not `rolsuper`).
+- `gcloud sql users create` automatically grants `cloudsqlsuperuser` to every new user.
+  To create a least-privilege user, do all setup first then `REVOKE cloudsqlsuperuser FROM <user>`.
 - `gcloud sql users create` behaves as an upsert: if the user already exists it updates the
   password and returns success (exit 0).
 - Labels update require `gcloud alpha sql instances patch --update-labels`.
