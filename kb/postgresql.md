@@ -17,6 +17,10 @@
 - To drop an active replication slot: terminate the walsender and drop the slot in the same `psql` command
   (subscribers auto-reconnect, so a separate step risks the slot being reclaimed).
 
+### Monitoring tablesync progress
+
+- `SELECT * FROM pg_stat_progress_copy` shows the actual COPY progress (rows copied, total rows) for the active tablesync worker.
+
 ## COPY
 
 ### Performance: `COPY table` vs `COPY (SELECT * FROM table)`
@@ -51,6 +55,58 @@ Verified against [REL_18_3](https://github.com/postgres/postgres/tree/REL_18_3).
 - Only affects the **publisher side**. The subscriber is always single-threaded per table.
 
 [tablesync-copy]: https://github.com/postgres/postgres/blob/REL_18_3/src/backend/replication/logical/tablesync.c#L1143
+
+## Replication Lag Monitoring
+
+### What `pg_stat_replication` lag columns measure
+
+- `write_lag`, `flush_lag`, `replay_lag` measure the time between the
+  **walsender processing** an LSN and the standby/subscriber confirming that LSN.
+  The timestamp paired with each LSN is `GetCurrentTimestamp()` at walsender
+  processing time, not the time the WAL was originally generated. Both physical
+  and logical replication use the same mechanism.
+- `(pg_current_wal_lsn() - replay_lsn)::bigint` gives byte distance from the
+  WAL tip to the replica's confirmed position. This is always accurate but is
+  in bytes, not time.
+- When replication is caught up, the time lag columns approximate data freshness.
+  When there is a large backlog, they can show seconds while the replica is
+  hours or days behind.
+
+### What `pg_last_xact_replay_timestamp()` measures
+
+Returns the **publisher's original commit timestamp** from the WAL record (the
+primary's clock at commit time). Only works on physical standbys (servers in
+recovery). Returns NULL on normal servers, including logical replication
+subscribers. No configuration needed.
+
+### What `pg_last_committed_xact()` returns
+
+Returns `(xid, timestamp, roident)` for the globally latest committed
+transaction. When `track_commit_timestamp = on` on the subscriber, the timestamp
+for replicated transactions is the **publisher's** original commit time, not the
+local apply time. `roident <> 0` indicates a replicated transaction. If the
+subscriber has local writes, the latest xid may not be a replicated one.
+
+### `track_commit_timestamp` GUC
+
+Default `off`. Requires restart (`PGC_POSTMASTER`). Only needs to be on the
+subscriber — the publisher always sends commit timestamps in the replication
+protocol. Stores 10 bytes per unfrozen transaction on disk under `pg_commit_ts/`.
+Entries are truncated by vacuum at the same time as CLOG.
+
+### What `pg_stat_subscription` timestamps are
+
+- `last_msg_send_time` — walsender's clock when it sent the WAL data message
+- `last_msg_receipt_time` — subscriber's local clock when it received the message
+- `latest_end_time` — walsender's timestamp from the last keepalive message
+
+These are protocol-level timestamps. None are the publisher's original transaction
+commit timestamp.
+
+### `pg_replication_origin_status` has no timestamps
+
+Exposes `remote_lsn` and `local_lsn` only. No LSN-to-xid conversion function
+exists in PostgreSQL.
 
 ## psql CLI
 
