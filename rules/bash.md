@@ -99,6 +99,17 @@ info_json=$(jq --arg id "$db_id" '{
 }' <<< "$raw")
 ```
 
+### Use -e to branch on boolean results
+
+`jq -e` exits non-zero when the output is `false` or `null`, so boolean filters
+drive `if`/`||` directly without capturing output into a variable:
+
+```bash
+if jq -e '.enabled' <<< "$raw" >/dev/null; then
+    do_thing
+fi
+```
+
 ### Keep lists in JSON when already in JSON
 
 If a list originates from JSON or is being passed to/from `jq`, keep it as a
