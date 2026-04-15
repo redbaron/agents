@@ -18,6 +18,22 @@ ln -s ~/repos/agents/opencode.json ~/.config/opencode/opencode.json
 
 ## Commands
 
+### `/review` - Run A Separate Review Pass
+
+Runs the dedicated `review` subagent against the current worktree or a narrowed request.
+
+The `review` agent is also available as a primary agent, so you can switch to it with `Tab` for an iterative review session while keeping the same conversation context.
+
+**Syntax:**
+```bash
+/review "what to review"
+```
+
+**Example:**
+```bash
+/review "check my unstaged changes for bugs before I push"
+```
+
 ### `/when-asked` - Improve Agent Instructions
 
 Iteratively improve agent instructions until desired behavior is achieved.
