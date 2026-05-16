@@ -44,6 +44,5 @@
   "autoupdate": "notify",
   "watcher": {
     "ignore": ["node_modules/**", "dist/**", ".git/**"]
-  },
-  "plugin": ["opencode-claude-auth"]
+  }
 }
