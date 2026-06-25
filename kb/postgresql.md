@@ -7,6 +7,14 @@
 - `IN (...)` is NOT allowed in publication `WHERE` clauses — use `OR` chains instead.
 - Dropping a publication owner user fails if the publication still exists — must `DROP PUBLICATION` first.
 
+- Logical decoding uses **historic catalog snapshots** — publication membership and row
+  filters are evaluated against catalog state as of the decoded WAL record, not current.
+- If a publication doesn't exist at the slot's current WAL position, `pgoutput` logs
+  `skipped loading publication "<name>"` and the slot advances **without applying changes**.
+  `confirmed_flush_lsn` moves forward (lag shrinks) while no data is applied.
+- `pg_copy_logical_replication_slot` copies the source slot's current LSN — cannot move
+  backward.
+
 ### Subscriptions
 
 - `origin = 'none'` on both sides prevents replication loops in bidirectional setups.
@@ -16,6 +24,11 @@
 
 - To drop an active replication slot: terminate the walsender and drop the slot in the same `psql` command
   (subscribers auto-reconnect, so a separate step risks the slot being reclaimed).
+- `copy_data = true` (initial sync) creates **temporary tablesync slots** named
+  `pg_<suboid>_sync_<pid>_<xid>` on the publisher. These consume `max_replication_slots` alongside
+  the main subscription slots. 
+- Tablesync slots show `active = false` between table copies but are **not orphaned** — they belong
+  to active subscriptions. 
 
 ### Monitoring tablesync progress
 
