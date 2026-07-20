@@ -24,15 +24,40 @@
 
 - To drop an active replication slot: terminate the walsender and drop the slot in the same `psql` command
   (subscribers auto-reconnect, so a separate step risks the slot being reclaimed).
-- `copy_data = true` (initial sync) creates **temporary tablesync slots** named
-  `pg_<suboid>_sync_<pid>_<xid>` on the publisher. These consume `max_replication_slots` alongside
-  the main subscription slots. 
-- Tablesync slots show `active = false` between table copies but are **not orphaned** — they belong
-  to active subscriptions. 
+- `restart_lsn` retains WAL; it is not an MVCC horizon.
+- A normal logical slot typically has `catalog_xmin` but `xmin IS NULL`.
+  Logical decoding reads row changes from WAL and uses historic catalog state to
+  interpret them. It does not retain ordinary publisher heap versions.
+- `copy_data = true` creates permanent per-table sync slots named
+  `pg_<suboid>_sync_<pid>_<xid>` on the publisher. During initial COPY, the
+  source transaction holds the consistent data snapshot; the slot can show
+  `active = false` and `xmin IS NULL`.
 
 ### Monitoring tablesync progress
 
 - `SELECT * FROM pg_stat_progress_copy` shows the actual COPY progress (rows copied, total rows) for the active tablesync worker.
+
+## MVCC Cleanup Horizons
+
+- A non-NULL data `xmin` retains heap versions that could be visible to that
+  snapshot. It constrains VACUUM removal, opportunistic heap pruning, and btree
+  `LP_DEAD` hints. `catalog_xmin` has the equivalent effect only for catalogs
+  and shared relations.
+- Initial logical table sync retains ordinary-table versions through the
+  publisher COPY backend's `backend_xmin`, not through the sync slot's
+  persisted `xmin`. Find source-side holders with:
+
+  ```sql
+  SELECT pid, backend_type, application_name, backend_xmin, xact_start, query
+  FROM pg_stat_activity
+  WHERE backend_xmin IS NOT NULL
+  ORDER BY backend_xmin, xact_start;
+  ```
+
+- A physical slot by itself retains WAL through `restart_lsn`. It acquires a
+  data `xmin` only from hot-standby feedback; while that feedback is retained,
+  primary cleanup waits for standby snapshots. Without feedback, replay
+  cancels conflicting standby queries instead.
 
 ## COPY
 
