@@ -44,5 +44,6 @@
   "autoupdate": "notify",
   "watcher": {
     "ignore": ["node_modules/**", "dist/**", ".git/**"]
-  }
+  },
+  "plugin": ["@dietrichgebert/ponytail"]
 }
