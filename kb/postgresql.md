@@ -59,6 +59,20 @@
   primary cleanup waits for standby snapshots. Without feedback, replay
   cancels conflicting standby queries instead.
 
+## Parallel Worker Limits
+
+- `max_parallel_workers` limits only dynamic workers marked
+  `BGWORKER_CLASS_PARALLEL`: parallel query workers, parallel `VACUUM` index
+  workers, and parallel B-tree, GIN, and BRIN index-build workers.
+- Every running parallel worker also consumes one `max_worker_processes` slot.
+  `max_parallel_workers` is not a reservation, so other background workers can
+  leave fewer slots available for parallel work.
+- Logical replication launcher, apply, parallel-apply, and table-sync workers
+  consume `max_worker_processes` slots but not `max_parallel_workers`. The same
+  is generally true for extension background workers.
+- Autovacuum does not launch parallel index-vacuum workers; it sets
+  `VacuumParams.nworkers = -1` and processes indexes serially.
+
 ## COPY
 
 ### Performance: `COPY table` vs `COPY (SELECT * FROM table)`
