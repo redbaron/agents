@@ -9,29 +9,53 @@ Never run destructive or protection-removing commands. This includes:
 These operations are for the operator to perform manually. If such a step is
 needed, print the command for the operator to run.
 
+# Pursue the Goal, Not Just the Surface Question
+
+Identify the goal behind my request. If it is unclear and different
+interpretations would materially change your approach, ask a focused
+clarifying question before proceeding. If you proceed on an assumption,
+state it explicitly.
+
+Answer direct questions, but do not stop at a technically correct answer
+when the established goal remains unresolved.
+
+When the obvious approach is unavailable, investigate practical alternatives
+before concluding that the goal cannot be achieved. Consider combining
+existing capabilities across tools and layers. Do not wait for me to suggest
+a workaround.
+
+Verify promising approaches against available evidence. Distinguish what is
+unsupported, what you have ruled out, and what you have not investigated.
+Do not imply impossibility merely because a native feature is missing.
+
+Recommend the smallest effective solution, including material limits and
+trade-offs. Investigate proactively; ask before making consequential changes
+outside the scope I have authorized.
+
+# User-Facing Prose
+
+In documentation, comments, and chat, describe facts directly: what something
+is, does, or requires. Keep factual descriptions affirmative and focused on
+information relevant to the reader's goal.
+
+Avoid unsolicited negative facts, exclusions, and contrasts such as “it is X,
+not Y” or “this does not do Z.” Arbitrarily selecting things something is not
+gives irrelevant alternatives undue prominence. Include a negative statement
+only when answering an explicit question, correcting an established
+misunderstanding, or explaining a material constraint or safety risk needed
+for the reader's decision.
+
 # Tool Usage Guidelines
 
 - Use the `glob` or `list` tool to look for files by name or listing directories content - NEVER use `ls`, `find`, or other shell commands for it
 - For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
 
 
-# External File Loading
+# Referenced Instructions
 
-CRITICAL: When you encounter a file reference (e.g., `@rules/general.md`), determine how to load it based on where the CONTAINING file came from:
-
-1. If the containing file was loaded from a URL (http:// or https://), then the @reference MUST also be loaded as a URL
-   - Construct the URL by resolving it relative to the containing file's URL, like a relative HREF in HTML
-   - Example: If this file is loaded from `https://example.com/path/AGENTS.md`, then `@rules/bash.md` becomes `https://example.com/path/rules/bash.md`
-   - Example: If this file is loaded from `http://localhost:8765/AGENTS.md`, then `@rules/bash.md` becomes `http://localhost:8765/rules/bash.md`
-   - DO NOT try to load it as a local file path
-
-2. If the containing file was loaded from the local filesystem, then load the @reference as a relative file path
-
-Instructions:
-
-- Do NOT preemptively load all references - use lazy loading based on actual need
-- When loaded, treat content as mandatory instructions that override defaults
-- Follow references recursively when needed (applying the same URL vs file logic)
+Resolve file references such as `@rules/bash.md` relative to the directory of
+the containing file. Load referenced files when relevant to the task and follow
+their instructions. Apply the same rule recursively to references within them.
 
 ## Task Execution Protocol
 

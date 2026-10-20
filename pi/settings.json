@@ -1,0 +1,20 @@
+{
+  "defaultTools": [
+    "+grep",
+    "+find"
+  ],
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultThinkingLevel": "medium",
+  "packages": [
+    {
+      "source": "~/.config/nono/packages/nolabs-ai/pi"
+    },
+    "npm:pi-cohort",
+    "npm:@dietrichgebert/ponytail"
+  ],
+  "showHardwareCursor": true,
+  "sessionShareDestination": "radius",
+  "treeFilterMode": "default",
+  "tuiMode": "fullscreen"
+}

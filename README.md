@@ -10,6 +10,40 @@ To use with opencode symlink `~/.config/opencode/opencode.json` to [opencode.jso
 ln -s ~/repos/agents/opencode.json ~/.config/opencode/opencode.json
 ```
 
+## Pi settings
+
+Shared Pi preferences live in `pi/settings.json`. From this repository:
+
+```bash
+# Copy local preferences into the repository (run before committing).
+bash pi/sync-settings.sh pull
+
+# Apply repository preferences to this machine (run after git pull).
+bash pi/sync-settings.sh push
+```
+
+`pull` exports the portable preferences listed in the script. Extend that list
+when adding a new shared preference. Review package sources before committing:
+their values can contain private paths or embedded credentials.
+
+`push` merges shared preferences into the local configuration, preserving
+local-only fields such as machine IDs and changelog state. Shared values take
+precedence; arrays such as `packages` are replaced in full.
+
+Both directions validate JSON and atomically write a private destination file.
+The destination must be a regular file or a new path.
+
+The local agent directory defaults to `~/.pi/agent` and respects
+`PI_CODING_AGENT_DIR`. An optional second argument specifies the shared file
+path.
+
+### Session sharing restriction
+
+Pi settings select `radius` as the session sharing destination. Pair this with
+`network.deny_domain: ["radius.pi.dev"]` in your nono profile to block Pi's
+built-in `/share` upload. This combination keeps normal GitHub access available.
+The restriction depends on both the Pi setting and the nono domain block.
+
 ## Structure
 
 - `AGENTS.md` - Main instruction file loaded by opencode
