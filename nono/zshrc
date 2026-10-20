@@ -1,0 +1,23 @@
+typeset -g PIBOX_PROFILE="${${(%):-%x}:A:h}/infra.json"
+
+pibox() {
+    local root
+
+    # Prefer the jj workspace root, then the Git repository root.
+    if command -v jj >/dev/null 2>&1 &&
+       root=$(command jj root --ignore-working-copy 2>/dev/null); then
+        :
+    elif root=$(command git rev-parse --show-toplevel 2>/dev/null); then
+        :
+    else
+        root="$PWD"
+    fi
+
+    printf 'Pi working directory: %s\nSandbox grant:       %s\n' \
+        "$PWD" "$root" >&2
+
+    command nono run \
+        --profile "$PIBOX_PROFILE" \
+        --allow "$root" \
+        -- pi "$@"
+}

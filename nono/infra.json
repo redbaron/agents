@@ -1,0 +1,22 @@
+{
+  "extends": "pi",
+  "meta": {
+    "name": "infra",
+    "version": "1.0.0"
+  },
+  "filesystem": {
+    "read": [
+      "$HOME/.config/jj",
+      "$HOME/.kube/config",
+      "$HOME/.aws/config",
+      "$HOME/.config/gh",
+      "$HOME/Library/Application Support/influxctl/config.toml",
+      "$HOME/repos/agents"
+    ]
+  },
+  "network": {
+    "deny_domain": [
+      "radius.pi.dev"
+    ]
+  }
+}

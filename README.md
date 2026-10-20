@@ -10,6 +10,18 @@ To use with opencode symlink `~/.config/opencode/opencode.json` to [opencode.jso
 ln -s ~/repos/agents/opencode.json ~/.config/opencode/opencode.json
 ```
 
+## Pi sandbox
+
+Source the repository's helper from your `~/.zshrc`:
+
+```zsh
+source ~/repos/agents/nono/zshrc
+```
+
+Run `pibox` to launch Pi with `nono/infra.json`. The helper grants read/write
+access to the current jj workspace or Git repository, falling back to the
+current directory. Arguments are forwarded to Pi.
+
 ## Pi settings
 
 Shared Pi preferences live in `pi/settings.json`. From this repository:

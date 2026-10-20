@@ -53,9 +53,14 @@ for the reader's decision.
 
 # Referenced Instructions
 
-Resolve file references such as `@rules/bash.md` relative to the directory of
-the containing file. Load referenced files when relevant to the task and follow
-their instructions. Apply the same rule recursively to references within them.
+Before loading a relative reference, run `realpath` on the containing
+instruction file's path shown in context. This follows symlinks to their final
+target. Resolve references against the parent directory of that resolved path.
+For example, `@kb/postgresql.md` means `kb/postgresql.md` beside the resolved
+`AGENTS.md`. Cache the resolved directory for the session.
+
+Load referenced files when relevant to the task and follow their instructions.
+Apply the same resolution rule recursively to references within them.
 
 ## Task Execution Protocol
 
