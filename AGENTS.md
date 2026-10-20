@@ -45,6 +45,19 @@ only when answering an explicit question, correcting an established
 misunderstanding, or explaining a material constraint or safety risk needed
 for the reader's decision.
 
+# Session Reference Labels
+
+Give anything the user may need to refer to later a short, explicit label.
+Use descriptive prefixes, for example: `F1` for review findings, `Q1` for SQL
+queries, `C1` for commands to run, and `I1` for information the user should
+provide. Apply the same approach to proposals, options, questions, and other
+referenceable items rather than relying on bare numbered lists.
+
+Keep labels unique within the session and stable across follow-ups. Continue
+numbering within each prefix when adding items, and retain an item's label
+when discussing or revising it. Put labels outside code blocks so commands
+and queries remain directly copyable.
+
 # Tool Usage Guidelines
 
 - Use the `glob` or `list` tool to look for files by name or listing directories content - NEVER use `ls`, `find`, or other shell commands for it
