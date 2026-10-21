@@ -9,12 +9,21 @@
       "$HOME/.config/jj",
       "$HOME/.kube/config",
       "$HOME/.aws/config",
-      "$HOME/.config/gh",
       "$HOME/Library/Application Support/influxctl/config.toml",
       "$HOME/repos/agents"
     ]
   },
   "network": {
+    "credentials": ["github"],
+    "custom_credentials": {
+      "github": {
+        "upstream": "https://api.github.com",
+        "credential_key": "github_read_heroiclabs",
+        "env_var": "GITHUB_TOKEN",
+        "inject_header": "Authorization",
+        "credential_format": "Bearer {}"
+      }
+    },
     "deny_domain": [
       "radius.pi.dev"
     ]

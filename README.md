@@ -22,6 +22,16 @@ Run `pibox` to launch Pi with `nono/infra.json`. The helper grants read/write
 access to the current jj workspace or Git repository, falling back to the
 current directory. Arguments are forwarded to Pi.
 
+The profile defines a Keychain-backed `github` credential proxy. Store the approved
+read-only GitHub token in macOS Keychain under service `nono`, account
+`github_read_$org`, where `$org` is the repository's GitHub organization. Set the
+profile's `credential_key` to that account name. nono supplies a phantom token
+inside the sandbox and injects the real credential into matching GitHub API
+requests. GitHub enforces the token's read-only permissions.
+
+Planned: have `pibox` determine the repository's GitHub organization and select
+or generate the corresponding nono profile at launch.
+
 ## Pi settings
 
 Shared Pi preferences live in `pi/settings.json`. From this repository:
