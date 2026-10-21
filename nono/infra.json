@@ -6,6 +6,8 @@
   },
   "filesystem": {
     "read": [
+      "$HOME/.gitconfig",
+      "$HOME/.gitignore",
       "$HOME/.config/jj",
       "$HOME/.kube/config",
       "$HOME/.aws/config",
