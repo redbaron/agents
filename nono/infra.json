@@ -13,6 +13,9 @@
       "$HOME/.aws/config",
       "$HOME/Library/Application Support/influxctl/config.toml",
       "$HOME/repos/agents"
+    ],
+    "allow": [
+      "$HOME/go/pkg"
     ]
   },
   "network": {
