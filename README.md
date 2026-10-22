@@ -20,7 +20,19 @@ source ~/repos/agents/nono/zshrc
 
 Run `pibox` to launch Pi with `nono/infra.json`. The helper grants read/write
 access to the current jj workspace or Git repository, falling back to the
-current directory. Arguments are forwarded to Pi.
+current directory. Each argument that names an existing filesystem path becomes
+an additional `--allow` read/write grant. All other arguments are forwarded to Pi
+in their original order. Use `--` to forward all remaining arguments to Pi,
+including existing paths:
+
+```zsh
+pibox /path/to/extra /path/to/another --continue
+pibox "../shared files" -- --session /path/to/existing/session.json
+```
+
+Relative paths resolve from the current directory; Pi keeps that working directory.
+Before `--`, existing paths are treated as grants, including paths supplied as Pi
+option values. The separator itself is consumed by `pibox`.
 
 The profile defines a Keychain-backed `github` credential proxy. Store the approved
 read-only GitHub token in macOS Keychain under service `nono`, account

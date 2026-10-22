@@ -1,7 +1,21 @@
 typeset -g PIBOX_PROFILE="${${(%):-%x}:A:h}/infra.json"
 
 pibox() {
-    local root
+    local root dir arg
+    local -a grants=() pi_args=()
+
+    while (( $# )); do
+        arg="$1"
+        shift
+        if [[ "$arg" == -- ]]; then
+            pi_args+=("$@")
+            break
+        elif [[ -e "$arg" ]]; then
+            grants+=(--allow "${arg:A}")
+        else
+            pi_args+=("$arg")
+        fi
+    done
 
     # Prefer the jj workspace root, then the Git repository root.
     if command -v jj >/dev/null 2>&1 &&
@@ -15,9 +29,13 @@ pibox() {
 
     printf 'Pi working directory: %s\nSandbox grant:       %s\n' \
         "$PWD" "$root" >&2
+    for dir in "${grants[@]}"; do
+        [[ "$dir" == --allow ]] || printf 'Extra sandbox grant: %s\n' "$dir" >&2
+    done
 
     command nono run \
         --profile "$PIBOX_PROFILE" \
         --allow "$root" \
-        -- pi "$@"
+        "${grants[@]}" \
+        -- pi "${pi_args[@]}"
 }
