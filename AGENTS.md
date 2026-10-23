@@ -62,6 +62,7 @@ and queries remain directly copyable.
 
 - Use the `glob` or `list` tool to look for files by name or listing directories content - NEVER use `ls`, `find`, or other shell commands for it
 - For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
+- Assume files remain in the state you last read or successfully edited. Reuse that known content for consecutive edits, incorporating your own changes. Reload a file only when a patch fails; then read the relevant section and retry.
 
 
 # Referenced Instructions
