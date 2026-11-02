@@ -20,7 +20,8 @@ source ~/repos/agents/nono/zshrc
 
 Run `pibox` to launch Pi with `nono/infra.json`. The helper grants read/write
 access to the current jj workspace or Git repository, falling back to the
-current directory. Each argument that names an existing filesystem path becomes
+current directory. Linked jj workspaces also grant access to their shared jj
+repository and backing Git directory. Each argument that names an existing filesystem path becomes
 an additional `--allow` read/write grant. All other arguments are forwarded to Pi
 in their original order. Use `--` to forward all remaining arguments to Pi,
 including existing paths:

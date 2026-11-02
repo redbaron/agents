@@ -1,7 +1,7 @@
 typeset -g PIBOX_PROFILE="${${(%):-%x}:A:h}/infra.json"
 
 pibox() {
-    local root dir arg
+    local root repo git_dir dir arg
     local -a grants=() pi_args=()
 
     while (( $# )); do
@@ -20,7 +20,16 @@ pibox() {
     # Prefer the jj workspace root, then the Git repository root.
     if command -v jj >/dev/null 2>&1 &&
        root=$(command jj root --ignore-working-copy 2>/dev/null); then
-        :
+        # Linked workspaces store a path relative to .jj in this file.
+        if [[ -f "$root/.jj/repo" ]]; then
+            repo=$(<"$root/.jj/repo")
+            [[ "$repo" == /* ]] || repo="$root/.jj/$repo"
+            grants+=(--allow "${repo:A}")
+        fi
+        if git_dir=$(command jj git root --ignore-working-copy 2>/dev/null); then
+            git_dir="${git_dir:A}"
+            [[ "$git_dir" == "${root:A}"/* ]] || grants+=(--allow "$git_dir")
+        fi
     elif root=$(command git rev-parse --show-toplevel 2>/dev/null); then
         :
     else
