@@ -9,6 +9,7 @@
       "$HOME/.gitconfig",
       "$HOME/.gitignore",
       "$HOME/.config/jj",
+      "$HOME/.config/gh",
       "$HOME/.kube/config",
       "$HOME/.aws/config",
       "$HOME/Library/Application Support/influxctl/config.toml",
