@@ -72,6 +72,7 @@ and queries remain directly copyable.
 
 # Tool Usage Guidelines
 
+- Before version-control operations, check whether the repository uses `jj` (including colocated Git repositories). Use `jj` for status, diffs, and history in jj-managed repositories. Use `jj diff --git` for familiar Git-format diffs.
 - Use the `glob` or `list` tool to look for files by name or listing directories content - NEVER use `ls`, `find`, or other shell commands for it
 - For JSON processing on the command line (reading files or filtering output in shell pipelines), use `jq`
 - Assume files remain in the state you last read or successfully edited. Reuse that known content for consecutive edits, incorporating your own changes. Reload a file only when a patch fails; then read the relevant section and retry.
@@ -96,6 +97,8 @@ Apply the same resolution rule recursively to references within them.
 - For ANY work involving AWS infrastructure, RDS, EC2, IAM, `aws` CLI, or answering questions about AWS: @kb/AWS.md
 - For ANY use of `gh` CLI or GitHub API, including PRs, issues, reviews, comments, and checks: @kb/github.md
 - For creating or editing shell scripts (files matching `*.sh`): @rules/bash.md
+- For writing, modifying, or reviewing tests, or deciding what to test: @rules/testing.md
+- For implementation work, design changes, or branch reviews: @rules/branch-coherence.md
 - For PostgreSQL usage, replication, and troubleshooting: @kb/postgresql.md
 
 Source code links in knowledge base files are for deep dives only — do not load them unless tasked with explaining or verifying the underlying reasoning.
