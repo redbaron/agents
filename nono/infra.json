@@ -1,5 +1,5 @@
 {
-  "extends": "pi",
+  "extends": "nolabs-ai/pi",
   "meta": {
     "name": "infra",
     "version": "1.0.0"
